@@ -1,9 +1,15 @@
-FROM golang:1.18
+FROM golang:1.18 as builder
 
 WORKDIR /app
 
 COPY . .
 
-RUN go build -o main
+RUN go build -o /main main.go
 
-ENTRYPOINT ["./main"]
+FROM scratch
+
+WORKDIR /
+
+COPY --from=builder /main /main
+
+ENTRYPOINT ["/main"]
